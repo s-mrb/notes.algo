@@ -80,6 +80,21 @@ console.log(fruits); // ["apple", "banana", "kiwi", "orange"]
 fruits.pop();
 console.log(fruits); // ["apple", "banana", "kiwi"]
 ```
+# Comparing objests in JS
+```js
+var user1 = {name : "nerd", org: "dev"};
+var user2 = {name : "nerd", org: "dev"};
+var eq = user1 == user2;
+alert(eq); // gives false
+```
+
+To do something like this: Use lodash. It's isEqual method does exactly what you want
+
+```js
+var eq = Object.toJSON(user1) == Object.toJSON(user2);
+alert(eq); // gives true
+```
+
 
 # Problems
 
@@ -1030,33 +1045,366 @@ var levelOrder = function(root) {
 
 ## Convert Sorted Array to Binary Search Tree
 
+```js
+
+function TreeNode(val, left, right) {
+  this.val = val === undefined ? 0 : val
+  this.left = left === undefined ? null : left
+  this.right = right === undefined ? null : right
+}
+
+function sortedArrayToBST(arr) {
+  return bbst(arr, 0, arr.length - 1)
+}
+
+const bbst = (arr, start, end) => {
+  if (start > end) {
+    return null
+  }
+  var mid = parseInt((start + end) / 2)
+  var node = new TreeNode()
+  node.val = arr[mid]
+  node.left = bbst(arr, start, mid - 1)
+  node.right = bbst(arr, mid + 1, end)
+  return node
+}
+```
+
+## Balanced Binary Tree
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {boolean}
+ */
+
+var isBalanced = function (root) {
+  return maxDepth(root) == Infinity ? false : true
+}
+
+var maxDepth = function (root) {
+  if (!root) {
+    return 0
+  }
+  let lh = maxDepth(root.left) + 1
+  let rh = maxDepth(root.right) + 1
+  if (Math.abs(lh - rh) > 1) {
+    return Infinity
+  }
+  return Math.max(lh, rh)
+}
+```
+
+## Minimum Depth of Binary Tree
+
+```js
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ *}
+ */
+
+/**
+ * @param {TreeNode} root
+ * @return {number}
+ */
+var minDepth = function (root) {
+  if (!root) {
+    return 0
+  }
+  if (!root.right) {
+    return minDepth(root.left) + 1
+  }
+  if (!root.left) {
+    return minDepth(root.right) + 1
+  }
+  return Math.min(minDepth(root.left), minDepth(root.right)) + 1
+}
+```
 
 ## Symmetric Tree
 ## preorder traversal 
 ## postorder traversal 
-## Balanced Binary Tree
-## Minimum Depth of Binary Tree
 ## Path Sum
 
 # DSA Linked List
+
 ## Cycle
+```js
+const hasCycle = head => {
+    let p1 = head
+    let p2 = head
+    
+    while (p2 && p2.next && p2.next.next) {
+        p1 = p1.next
+        p2 = p2.next.next
+        
+        if (p1 === p2) {
+            return true
+        }
+    }
+    
+    return false
+}
+```
+
 ## Intersection of Linked Lists
+
+```js
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val) {
+ *     this.val = val;
+ *     this.next = null;
+ * }
+ */
+
+/**
+ * @param {ListNode} headA
+ * @param {ListNode} headB
+ * @return {ListNode}
+ */
+var getIntersectionNode = function(headA, headB) {
+    var a = headA
+    var b = headB
+    while(a!==b)
+{
+    a = !a ? headB : a.next
+    b = !b ? headA : b.next
+           
+}
+    return b
+};
+```
+
 ## Remove Linked List Elements
+Given the head of a linked list and an integer val, remove all the nodes of the linked list that has Node.val == val, and return the new head
+
+
+```js
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} head
+ * @param {number} val
+ * @return {ListNode}
+ */
+var removeElements = function(head, val) {
+    if(!head) return null
+    var node1 = head
+    var node2 = head.next
+    
+    while(node2){
+        if(node2.val==val){
+            node2 = node2.next
+            node1.next = node2
+            
+            continue
+        }
+        node1 = node2
+        node2 = node2.next
+        
+    }
+    
+    if(head.val==val){
+        return head.next
+    }
+    return head
+};
+```
+
 ## Reverse Linked List
 
+```js
+/**
+ * @param {ListNode} head
+ * @return {ListNode}
+ */
+var reverseList = function(head) {
+    if(!head) return null
+
+
+    var new_head = new ListNode(-1)
+
+    // head = [2,3,4,5]
+    while(head){
+        new_head.val = head.val
+        new_head = new ListNode(-1,new_head)
+        head = head.next
+    }
+    return new_head.next
+}
+```
+
+## Merge Two Sorted Linked Lists
+
+```js
+var mergeTwoLists = function (l1, l2) {
+  let merged = { val: null, next: null }
+  let crt = merged
+
+  while (l1 && l2) {
+    if (l1.val > l2.val) {
+      crt.next = l2
+      l2 = l2.next
+    } else {
+      crt.next = l1
+      l1 = l1.next
+    }
+
+
+    crt = crt.next
+  }
+  crt.next = l1 || l2
+
+  return merged.next
+}
+```
+
 # DSA Stack
-## Design a Stack
 ## Implement Stack with Queues
+
+```js
+/**
+ * Initialize your data structure here.
+ */
+var MyStack = function () {
+  this.q1 = []
+  this.q2 = []
+  this.t = undefined
+}
+
+/**
+ * Push element x onto stack.
+ * @param {number} x
+ * @return {void}
+ */
+MyStack.prototype.push = function (x) {
+  this.t = x
+  this.q1.push(x)
+}
+
+/**
+ * Removes the element on top of the stack and returns that element.
+ * @return {number}
+ */
+MyStack.prototype.pop = function () {
+  while (this.q1.length > 1) {
+    this.q2.push(this.q1.shift())
+  }
+
+  var res = this.q1.shift()
+  while (this.q2.length>1) {
+    this.q1.push(this.q2.shift())
+  }
+  if(this.q2.length){
+    this.t = this.q2[0]
+    this.q1.push(this.q2.shift())
+  }
+
+  return res
+}
+
+/**
+ * Get the top element.
+ * @return {number}
+ */
+MyStack.prototype.top = function () {
+  return this.t
+}
+
+/**
+ * Returns whether the stack is empty.
+ * @return {boolean}
+ */
+MyStack.prototype.empty = function () {
+  return this.q1.length == 0
+}
+```
+
+## Design a Stack | Min Stack | Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
+
+
+```js
+/**
+ * initialize your data structure here.
+ */
+var MinStack = function () {
+  this.stack = []
+  this.min = Number.POSITIVE_INFINITY
+  this.min_degree = 0
+}
+
+/**
+ * @param {number} val
+ * @return {void}
+ */
+MinStack.prototype.push = function (val) {
+  this.stack.push(val)
+  if (this.min > val) {
+    this.min = val
+    this.min_degree = 1
+  } else if (this.min == val) {
+    this.min_degree = this.min_degree + 1
+  }
+}
+
+/**
+ * @return {void}
+ */
+MinStack.prototype.pop = function () {
+  if (this.min == this.stack.pop()) {
+    this.min_degree = Math.max(this.min_degree - 1, 0)
+    if (this.min_degree == 0) {
+      this.min = Number.POSITIVE_INFINITY
+      for (var i = 0; i < this.stack.length; i++) {
+        if (this.stack[i] < this.min) {
+          this.min = this.stack[i]
+          this.min_degree = 1
+        } else if (this.stack[i] == this.min) {
+          this.min_degree = this.min_degree + 1
+        }
+      }
+    }
+  }
+}
+
+/**
+ * @return {number}
+ */
+MinStack.prototype.top = function () {
+  return this.stack[this.stack.length - 1]
+}
+
+/**
+ * @return {number}
+ */
+MinStack.prototype.getMin = function () {
+  return this.min
+}
+```
+
+
 
 ## Contains Duplicate 1
 ## Contains Duplicate 2
 ## Excel sheet columns number
 ## Excel sheet columns title
-
 ## Pascal's Triangle II
-
-## Merge Two Sorted Linked Lists
-
-
 ## Remove Duplicates from Sorted List
 
