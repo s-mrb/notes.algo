@@ -91,8 +91,18 @@ alert(eq); // gives false
 To do something like this: Use lodash. It's isEqual method does exactly what you want
 
 ```js
+// but without lodads below code wont work
 var eq = Object.toJSON(user1) == Object.toJSON(user2);
 alert(eq); // gives true
+```
+
+```js
+let a = {a:'aaaaa', b:'bbbbb'}
+let b = {a:'aaaaa', b:'bbbbb'}
+
+let c = JSON.stringify(a)
+let d = JSON.stringify(b)
+console.log(c==d)
 ```
 
 
